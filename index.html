@@ -211,7 +211,8 @@
 
         :root {
     /* ... mevcut değişkenler ... */
-    --font-family: 'Inter', system-ui, sans-serif;
+   --font-family: 'Inter', system-ui, sans-serif;
+
 }
 
 body {
@@ -236,7 +237,7 @@ body {
         <h2 style="font-family:'Montserrat'; color:var(--accent); margin-bottom:30px; font-size: 1.5rem;">MENU</h2>
         <div class="menu-item" onclick="closeAll()">📅 Günlük Plan</div>
         <div class="menu-item" onclick="openNotes()">📝 Notlarım</div>
-        <<div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
+        <div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
         <div class="menu-item" onclick="openAyarlar()">⚙️ Ayarlar</div>
     </nav>
 
@@ -252,14 +253,15 @@ body {
     <div id="about-panel" class="notes-panel-style" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: var(--card); border-left: 1px solid var(--border); z-index: 9999; transition: 0.3s ease; padding: 25px; display: flex; flex-direction: column; box-sizing: border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
         <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">HAKKINDA</h3>
-        <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem; line-height: 1;">&times;</span>
+        <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem;">&times;</span>
     </div>
         <div id="ayarlar-panel" class="notes-panel-style" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: var(--card); border-left: 1px solid var(--border); z-index: 9999; transition: 0.3s ease; padding: 25px; display: flex; flex-direction: column; box-sizing: border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
         <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">AYARLAR</h3>
         <span onclick="closeAll()" style="cursor:pointer; font-size:1.8rem; line-height:1;">×</span>
+          <div style="font-size:0.9rem; line-height:1.6;">
     </div>
-
+    </div>
     <section style="margin-bottom: 30px;">
         <label style="display:block; margin-bottom:8px; font-weight:500;">Tema</label>
         <select id="select-tema" class="input-box" style="width:100%; padding:12px;">
@@ -383,6 +385,7 @@ body {
         function openNotes() {
             closeAll(); // Diğerlerini kapat
             document.getElementById('notes-panel').classList.add('open');
+            document.getElementById('ayarlar-panel')?.classList.remove('open');
             document.getElementById('overlay').classList.add('active');
             drawNotes();
         }
