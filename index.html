@@ -208,7 +208,47 @@
         .input-box:focus { border-color: var(--accent); }
         .info-note { font-size: 9px; opacity: 0.6; margin-bottom: 5px; font-style: italic; display: flex; justify-content: space-between; }
         footer { padding: 10px; text-align: center; font-size: 0.7rem; opacity: 0.5; border-top: 1px solid var(--border); flex-shrink: 0; }
+    
+                        
+                    /* --- TEMA RENK TANIMLARI --- */
+            
+            /* Saman Kağıdı Teması */
+            body.theme-paper {
+                background-color: #f4ecd8 !important;
+                color: #5b4636 !important;
+            }
+            body.theme-paper .not-karti { /* Not kartların varsa onları da uyumlu yap */
+                background: #fdf8e1;
+                border-color: #d6c19d;
+            }
+            
+            /* Derin Deniz Mavisi */
+            body.theme-ocean {
+                background-color: #0f172a !important;
+                color: #e2e8f0 !important;
+            }
+            body.theme-ocean .not-karti {
+                background: #1e293b;
+                border-color: #334155;
+                color: white;
+            }
+            
+            /* Klasik Terminal (Hacker) */
+            body.theme-terminal {
+                background-color: #000000 !important;
+                color: #00ff00 !important;
+            }
+            body.theme-terminal .not-karti {
+                background: #0a0a0a;
+                border: 1px solid #00ff00;
+                color: #00ff00;
+            }
+    
+    
+    
     </style>
+
+    
 </head>
 <body data-theme="dark">
     <div id="ptr-indicator">
@@ -254,6 +294,39 @@
     ⚠️ <b>Geliştirme Aşaması:</b> Bu uygulama henüz Beta sürümündedir. Kullanım sırasında çeşitli hatalarla karşılaşmanız olasıdır.Anlayışınız için teşekkür ederiz
 </p>
     </div>
+                <div class="menu-item" onclick="toggleSettings()">
+            <span>⚙️ Ayarlar</span>
+        </div>
+        
+        <div id="settings-panel" class="settings-sidebar">
+            <div class="settings-header">
+                <h3>Ayarlar</h3>
+                <button onclick="toggleSettings()" class="close-btn">&times;</button>
+            </div>
+            
+            <div class="settings-content">
+                <div class="setting-group">
+                    <label>Tema Seçimi</label>
+                    <select id="theme-select" onchange="changeTheme(this.value)">
+                        <option value="default">Varsayılan (Modern)</option>
+                        <option value="paper">Saman Kağıdı</option>
+                        <option value="ocean">Derin Deniz Mavisi</option>
+                        <option value="terminal">Klasik Terminal (Hacker)</option>
+                    </select>
+                </div>
+        
+                <div class="setting-group">
+                    <label>Yazı Tipi</label>
+                    <select id="font-select" onchange="changeFont(this.value)">
+                        <option value="sans-serif">Modern (Düz)</option>
+                        <option value="serif">Klasik (Kitap)</option>
+                        <option value="monospace">Daktilo (Retro)</option>
+                    </select>
+        </div>
+    </div>
+</div>
+
+<div id="overlay" onclick="toggleSettings()"></div>
 </div>
 
     <header id="app-header">
@@ -477,6 +550,32 @@
             notlar.splice(idx, 1); 
             localStorage.setItem('odak_notlar_v9', JSON.stringify(notlar)); 
             drawNotes(); 
+        }
+                function toggleSettings() {
+            document.getElementById('settings-panel').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+        
+        // Tema Değiştirme
+        function changeTheme(theme) {
+            const body = document.body;
+            body.classList.remove('theme-paper', 'theme-ocean', 'theme-terminal');
+            
+            if (theme !== 'default') {
+                body.classList.add('theme-' + theme);
+            }
+        }
+        
+        // Yazı Tipi Değiştirme
+        function changeFont(fontType) {
+            const body = document.body;
+            if (fontType === 'serif') {
+                body.style.fontFamily = "'Georgia', serif";
+            } else if (fontType === 'monospace') {
+                body.style.fontFamily = "'Courier New', monospace";
+            } else {
+                body.style.fontFamily = "'Segoe UI', sans-serif";
+            }
         }
 
         ciz();
