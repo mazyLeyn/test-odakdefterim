@@ -9,6 +9,13 @@
     <style>
         #about-panel.open { right: 0 !important; }
         :root {
+            --bg: #0f172a;
+            --card: #111827;
+            --text: #e5e7eb;
+            --border: #30363d;
+            --accent: #3b82f6;
+
+            
             --bg: #f0f2f5; --card: #ffffff; --accent: #0969da; --text: #1f2328; 
             --border: #d0d7de; --danger: #cf222e; --warning: #9a6700; 
             --input: #ffffff; --shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -631,40 +638,81 @@ function temaSet(t) {
 
     const root = document.documentElement;
 
+    const themes = {
+
+        defaultLight: {
+            '--bg': '#f0f2f5',
+            '--card': '#ffffff',
+            '--text': '#1f2328',
+            '--border': '#d0d7de',
+            '--accent': '#0969da'
+        },
+
+        defaultDark: {
+            '--bg': '#0f172a',
+            '--card': '#111827',
+            '--text': '#e5e7eb',
+            '--border': '#30363d',
+            '--accent': '#3b82f6'
+        },
+
+        deep: {
+            '--bg': '#020617',
+            '--card': '#0f172a',
+            '--text': '#cbd5f5',
+            '--border': '#1e293b',
+            '--accent': '#2563eb'
+        },
+
+        terminal: {
+            '--bg': '#000000',
+            '--card': '#001100',
+            '--text': '#00ff88',
+            '--border': '#003300',
+            '--accent': '#00ff88'
+        },
+
+        paper: {
+            '--bg': '#f3e7c9',
+            '--card': '#fff6dc',
+            '--text': '#3a2e1f',
+            '--border': '#d8c9a3',
+            '--accent': '#a67c52'
+        }
+
+    };
+
+    let selectedTheme;
+
     if (t === "default") {
 
-        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-            root.style.setProperty('--bg', '#f0f2f5');
-            root.style.setProperty('--card', '#ffffff');
-            root.style.setProperty('--text', '#1f2328');
-        } else {
-            root.style.setProperty('--bg', '#0f172a');
-            root.style.setProperty('--card', '#111827');
-            root.style.setProperty('--text', '#e5e7eb');
-        }
+        if (window.matchMedia('(prefers-color-scheme: light)').matches)
+            selectedTheme = themes.defaultLight;
+        else
+            selectedTheme = themes.defaultDark;
 
+    } else {
+        selectedTheme = themes[t];
     }
 
-    if (t === "deep") {
-        root.style.setProperty('--bg', '#020617');
-        root.style.setProperty('--card', '#0f172a');
-        root.style.setProperty('--text', '#cbd5f5');
-    }
+    Object.entries(selectedTheme).forEach(([key, value]) => {
+        root.style.setProperty(key, value);
+    });
 
-    if (t === "terminal") {
-        root.style.setProperty('--bg', '#000000');
-        root.style.setProperty('--card', '#001100');
-        root.style.setProperty('--text',
+    localStorage.setItem("tema-secim", t);
+}
 
+        temaSet(localStorage.getItem("tema-secim") || "default");
 
-    window.matchMedia('(prefers-color-scheme: dark)')
-    .addEventListener('change', () => {
+        window.matchMedia('(prefers-color-scheme: dark)')
+.addEventListener('change', () => {
 
-        if (localStorage.getItem("tema-secim") === "default") {
-            temaSet("default");
-        }
+    if (localStorage.getItem("tema-secim") === "default")
+        temaSet("default");
 
 });
+
+
 
     
     </script>
