@@ -209,11 +209,6 @@
         .info-note { font-size: 9px; opacity: 0.6; margin-bottom: 5px; font-style: italic; display: flex; justify-content: space-between; }
         footer { padding: 10px; text-align: center; font-size: 0.7rem; opacity: 0.5; border-top: 1px solid var(--border); flex-shrink: 0; }
 
-        :root {
-    /* ... mevcut değişkenler ... */
-   --font-family: 'Inter', system-ui, sans-serif;
-
-}
 
 body {
     font-family: var(--font-family);
@@ -250,11 +245,19 @@ body {
         <button onclick="saveNote()" style="background:var(--accent); color:white; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:600; width:100%;">Ekle</button>
         <div id="notes-list" style="margin-top:20px; overflow-y:auto; flex-grow:1; padding-right: 5px;"></div>
     </div>
-    <div id="about-panel" class="notes-panel-style" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: var(--card); border-left: 1px solid var(--border); z-index: 9999; transition: 0.3s ease; padding: 25px; display: flex; flex-direction: column; box-sizing: border-box;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">HAKKINDA</h3>
-        <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem;">&times;</span>
+    <div id="about-panel" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: var(--card); border-left: 1px solid var(--border); z-index: 9999; transition: 0.3s ease; padding: 25px; display: flex; flex-direction: column; box-sizing: border-box;">
+    
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">HAKKINDA</h3>
+            <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem;">×</span>
+        </div>
+    
+        <div style="font-size:0.9rem; line-height:1.6;">
+            İçerik burada
+        </div>
+    
     </div>
+
         <div id="ayarlar-panel" class="notes-panel-style" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: var(--card); border-left: 1px solid var(--border); z-index: 9999; transition: 0.3s ease; padding: 25px; display: flex; flex-direction: column; box-sizing: border-box;">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
         <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">AYARLAR</h3>
@@ -396,16 +399,16 @@ body {
             document.getElementById('overlay').classList.add('active');
         }
         
-        function closeAll() {
-            // Her şeyi başlangıç durumuna getirir
+                function closeAll() {
+        
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('notes-panel').classList.remove('open');
-            // Hakkında paneli için hem class hem style kontrolü (garanti olsun diye)
-            const about = document.getElementById('about-panel');
-            if(about) about.classList.remove('open'); 
-            
+            document.getElementById('about-panel').classList.remove('open');
+            document.getElementById('ayarlar-panel').classList.remove('open');
+        
             document.getElementById('overlay').classList.remove('active');
         }
+
 
         scrollArea.addEventListener('wheel', (e) => {
             if (e.deltaY !== 0 && window.innerWidth > 800) {
