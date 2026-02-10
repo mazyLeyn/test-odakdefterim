@@ -364,6 +364,10 @@
         #overlay.active {
             display: block;
         }
+            function toggleSettings() {
+            document.getElementById('settings-panel').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
     </style>
 
     
@@ -664,10 +668,7 @@
             localStorage.setItem('odak_notlar_v9', JSON.stringify(notlar)); 
             drawNotes(); 
         }
-                function toggleSettings() {
-            document.getElementById('settings-panel').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
+
         
         // Tema Değiştirme
         function changeTheme(theme) {
