@@ -290,6 +290,11 @@ function setupDailyChallenge() {
     let challengeIndex = localStorage.getItem('challengeIndex');
     const isCompleted = localStorage.getItem('challengeCompleted') === today;
 
+        // Sayfa tamamen yüklendikten sonra çalıştırır
+    window.addEventListener('load', () => {
+        setupDailyChallenge();
+    });
+
     // Eğer yeni bir günse, rastgele yeni bir görev seç
     if (lastDate !== today) {
         challengeIndex = Math.floor(Math.random() * challenges.length);
@@ -380,7 +385,7 @@ setupDailyChallenge();
             <button class="burger" onclick="toggleMenu()">☰</button>
             <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
             <h1>ODAK DEFTERİ <span style="font-size: 0.7rem; opacity: 0.5;">Test v3.0.1</span></h1>
-                        <div class="mini-challenge" id="challenge-container">
+            <div class="mini-challenge" id="challenge-container">
             <div class="mini-header">
                 <span>GÜNÜN MÜCADELESİ</span>
                 <button onclick="completeChallenge()" id="challenge-btn">✓</button>
