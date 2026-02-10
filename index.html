@@ -275,7 +275,12 @@
     transform: translateY(-2px);
 }
   
-            
+            .font-sec.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(88,166,255,0.25);
+    transform: translateY(-2px);
+}
+
             
             
     </style>
@@ -619,7 +624,7 @@ box-sizing: border-box;
     document.getElementById('overlay').classList.add('active');
 }
 
-        function fontSet(font){
+ function fontSet(font){
 
     let f;
 
@@ -632,7 +637,16 @@ box-sizing: border-box;
 
     document.body.style.fontFamily = f;
     localStorage.setItem("odak_font", font);
+
+    // aktif kart efekti
+    document.querySelectorAll(".font-sec").forEach(el=>{
+        el.classList.remove("active");
+    });
+
+    const aktif = document.querySelector(`[onclick="fontSet('${font}')"]`);
+    if(aktif) aktif.classList.add("active");
 }
+
 
         const kayitliFont = localStorage.getItem("odak_font") || "Inter";
 fontSet(kayitliFont);
