@@ -208,6 +208,55 @@
         .input-box:focus { border-color: var(--accent); }
         .info-note { font-size: 9px; opacity: 0.6; margin-bottom: 5px; font-style: italic; display: flex; justify-content: space-between; }
         footer { padding: 10px; text-align: center; font-size: 0.7rem; opacity: 0.5; border-top: 1px solid var(--border); flex-shrink: 0; }
+    
+        
+                    .daily-challenge-box {
+                background: linear-gradient(135deg, #6e8efb, #a7a7ff);
+                color: white;
+                padding: 15px;
+                border-radius: 15px;
+                margin: 20px 0;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            }
+            
+            .challenge-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.8rem;
+                font-weight: bold;
+                margin-bottom: 8px;
+            }
+            
+            #challenge-btn {
+                background: white;
+                color: #6e8efb;
+                border: none;
+                padding: 4px 10px;
+                border-radius: 20px;
+                cursor: pointer;
+                font-size: 0.7rem;
+                font-weight: bold;
+                transition: 0.3s;
+            }
+            
+            #challenge-btn:hover {
+                transform: scale(1.1);
+            }
+            
+            #challenge-text {
+                font-size: 0.95rem;
+                margin: 0;
+                line-height: 1.4;
+            }
+            
+            .challenge-completed {
+                background: #4caf50 !important; /* Başarılı yeşili */
+                opacity: 0.8;
+            }
+    
+ 
+    
     </style>
 </head>
 <body data-theme="dark">
@@ -255,7 +304,16 @@
 </p>
     </div>
 </div>
+        <div class="daily-challenge-box" id="challenge-container">
+    <div class="challenge-header">
+        <span>🌟 Günün Mücadelesi</span>
+        <button onclick="completeChallenge()" id="challenge-btn">Tamamla</button>
+    </div>
+    <p id="challenge-text">Yükleniyor...</p>
+</div>
 
+
+    
     <header id="app-header">
         <div class="logo-area">
             <button class="burger" onclick="toggleMenu()">☰</button>
@@ -480,6 +538,63 @@
         }
 
         ciz();
+        /* ... Mevcut JavaScript kodlarının sonu ... */
+
+// 3. ADIM: GÜNLÜK GÖREV MANTIĞI
+            const challenges = [
+                "Bugün en az 2 litre su içmeyi unutma! 💧",
+                "Masandaki 3 gereksiz şeyi çöpe at. 🗑️",
+                "Bugün 15 dakika boyunca sadece kitap oku. 📚",
+                "Hiç bilmediğin bir konuda 5 dakikalık bir video izle. 🧠",
+                "Bir yakınına 'nasılsın' mesajı at. 📱",
+                "Bugün şekerli içeceklerden uzak dur. 🍏",
+                "5 dakika boyunca sadece derin nefes egzersizi yap. 🧘",
+                "Yarın yapacağın en önemli 3 şeyi şimdiden belirle. 📝"
+            ];
+            
+            function setupDailyChallenge() {
+                const today = new Date().toDateString();
+                const lastDate = localStorage.getItem('lastChallengeDate');
+                let challengeIndex = localStorage.getItem('challengeIndex');
+                const isCompleted = localStorage.getItem('challengeCompleted') === today;
+            
+                // Eğer gün değişmişse yeni görev seç
+                if (lastDate !== today) {
+                    challengeIndex = Math.floor(Math.random() * challenges.length);
+                    localStorage.setItem('challengeIndex', challengeIndex);
+                    localStorage.setItem('lastChallengeDate', today);
+                    localStorage.setItem('challengeCompleted', "false");
+                }
+            
+                const text = challenges[challengeIndex];
+                document.getElementById('challenge-text').innerText = text;
+            
+                if (isCompleted) {
+                    markAsDoneUI();
+                }
+            }
+            
+            function completeChallenge() {
+                const today = new Date().toDateString();
+                localStorage.setItem('challengeCompleted', today);
+                markAsDoneUI();
+            }
+            
+            function markAsDoneUI() {
+                const btn = document.getElementById('challenge-btn');
+                const container = document.getElementById('challenge-container');
+                if(btn && container) {
+                    btn.innerText = "Tamamlandı ✅";
+                    btn.disabled = true;
+                    container.classList.add('challenge-completed');
+                    document.getElementById('challenge-text').style.textDecoration = "line-through";
+                }
+            }
+            
+            // DİKKAT: Sayfa her açıldığında çalışması için bu satırı unutma!
+            setupDailyChallenge();
+
+            </script>
     </script>
 </body>
 </html>
