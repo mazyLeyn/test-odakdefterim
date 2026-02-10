@@ -671,11 +671,9 @@ function presetSet(name){
     if(aktif) aktif.classList.add("active");
 }
 
+const kayitliTema = localStorage.getItem("preset") || "default";
+presetSet(kayitliTema);
 
-        document.body.setAttribute(
-    "data-preset",
-    localStorage.getItem("preset") || "default"
-);
 
     </script>
 </body>
