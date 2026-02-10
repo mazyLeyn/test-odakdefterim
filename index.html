@@ -262,6 +262,8 @@
         <div class="menu-item" onclick="closeAll()">📅 Günlük Plan</div>
         <div class="menu-item" onclick="openNotes()">📝 Notlarım</div>
         <<div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
+        <div class="menu-item" onclick="toggleSettings()" style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px;">⚙️ Ayarlar</div>
+</div>
     </nav>
 
     <div id="notes-panel">
@@ -293,36 +295,7 @@
         <p style="margin-top: 20px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-radius: 8px; font-size: 0.8rem; color: var(--warning); border: 1px dashed var(--warning);">
     ⚠️ <b>Geliştirme Aşaması:</b> Bu uygulama henüz Beta sürümündedir. Kullanım sırasında çeşitli hatalarla karşılaşmanız olasıdır.Anlayışınız için teşekkür ederiz
 </p>
-    </div>
-                <div class="menu-item" onclick="toggleSettings()">
-            <span>⚙️ Ayarlar</span>
-        </div>
-        
-        <div id="settings-panel" class="settings-sidebar">
-            <div class="settings-header">
-                <h3>Ayarlar</h3>
-                <button onclick="toggleSettings()" class="close-btn">&times;</button>
-            </div>
-            
-            <div class="settings-content">
-                <div class="setting-group">
-                    <label>Tema Seçimi</label>
-                    <select id="theme-select" onchange="changeTheme(this.value)">
-                        <option value="default">Varsayılan (Modern)</option>
-                        <option value="paper">Saman Kağıdı</option>
-                        <option value="ocean">Derin Deniz Mavisi</option>
-                        <option value="terminal">Klasik Terminal (Hacker)</option>
-                    </select>
-                </div>
-        
-                <div class="setting-group">
-                    <label>Yazı Tipi</label>
-                    <select id="font-select" onchange="changeFont(this.value)">
-                        <option value="sans-serif">Modern (Düz)</option>
-                        <option value="serif">Klasik (Kitap)</option>
-                        <option value="monospace">Daktilo (Retro)</option>
-                    </select>
-        </div>
+     </div>
     </div>
 </div>
 
@@ -580,5 +553,34 @@
 
         ciz();
     </script>
+    <div id="settings-panel" class="settings-sidebar">
+    <div class="settings-header">
+        <h3>Ayarlar</h3>
+        <button onclick="toggleSettings()" class="close-btn">&times;</button>
+    </div>
+    
+    <div class="settings-content">
+        <div class="setting-group">
+            <label>Tema Seçimi</label>
+            <select id="theme-select" onchange="changeTheme(this.value)">
+                <option value="default">Varsayılan (Modern)</option>
+                <option value="paper">Saman Kağıdı</option>
+                <option value="ocean">Derin Deniz Mavisi</option>
+                <option value="terminal">Klasik Terminal (Hacker)</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label>Yazı Tipi</label>
+            <select id="font-select" onchange="changeFont(this.value)">
+                <option value="sans-serif">Modern (Düz)</option>
+                <option value="serif">Klasik (Kitap)</option>
+                <option value="monospace">Daktilo (Retro)</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<div id="overlay" onclick="toggleSettings()"></div>
 </body>
 </html>
