@@ -208,6 +208,53 @@
         .input-box:focus { border-color: var(--accent); }
         .info-note { font-size: 9px; opacity: 0.6; margin-bottom: 5px; font-style: italic; display: flex; justify-content: space-between; }
         footer { padding: 10px; text-align: center; font-size: 0.7rem; opacity: 0.5; border-top: 1px solid var(--border); flex-shrink: 0; }
+    
+             .mini-challenge {
+                background: rgba(255, 255, 255, 0.05); /* Arka plana uyumlu çok hafif şeffaf */
+                border-left: 3px solid #6e8efb;
+                padding: 8px 12px;
+                margin: 10px 0 10px 50px; /* Logodan biraz sağa açılması için */
+                border-radius: 6px;
+                max-width: 250px; /* Çok uzayıp gitmemesi için */
+            }
+            
+            .mini-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 0.65rem;
+                font-weight: bold;
+                color: #a7a7ff;
+                letter-spacing: 0.5px;
+                margin-bottom: 3px;
+            }
+            
+            #challenge-btn {
+                background: #6e8efb;
+                color: white;
+                border: none;
+                width: 18px;
+                height: 18px;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 0.6rem;
+                transition: 0.2s;
+            }
+            
+            #challenge-text {
+                font-size: 0.8rem;
+                color: #e0e0e0;
+                margin: 0;
+                line-height: 1.2;
+            }
+            
+            /* Tamamlandığında */
+            .challenge-completed {
+                border-left-color: #4caf50 !important;
+                background: rgba(76, 175, 80, 0.1) !important;
+            }
+    
+    
     </style>
 </head>
 <body data-theme="dark">
@@ -263,7 +310,18 @@
             <h1>ODAK DEFTERİ <span style="font-size: 0.7rem; opacity: 0.5;">Test v3.0.1</span></h1>
         </div>
         <button class="theme-toggle" onclick="temaDegistir()" id="theme-btn">Karanlık Mod</button>
+   
+            <div class="mini-challenge" id="challenge-container">
+        <div class="mini-header">
+            <span>GÜNÜN MÜCADELESİ</span>
+            <button onclick="completeChallenge()" id="challenge-btn">✓</button>
+        </div>
+        <p id="challenge-text">Yükleniyor...</p>
+    </div>
+    
+    
     </header>
+    
 
     <div class="board-wrapper" id="scroll-area">
         <div class="board" id="board"></div>
