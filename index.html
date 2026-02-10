@@ -219,6 +219,25 @@ body {
     right: 0 !important;
 }
         
+    .tema-sec {
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    margin-bottom: 15px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: 0.25s;
+    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+}
+
+.tema-sec:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+}
+
+    
     </style>
 </head>
 <body data-theme="dark">
@@ -281,13 +300,17 @@ body {
           <div style="font-size:0.9rem; line-height:1.6;">
     </div>
     </div>
-    <section style="margin-bottom: 30px;">
-        <label style="display:block; margin-bottom:8px; font-weight:500;">Tema</label>
-        <select id="select-tema" class="input-box" style="width:100%; padding:12px;">
-            <option value="system">Sistem varsayılanı</option>
-            <option value="light">Aydınlık</option>
-            <option value="dark">Karanlık</option>
-        </select>
+<section style="margin-bottom:30px;">
+    <label style="font-weight:600; display:block; margin-bottom:15px;">
+        Görünüm Teması
+    </label>
+
+    <div class="tema-sec" onclick="temaSet('default')">Varsayılan</div>
+    <div class="tema-sec" onclick="temaSet('deep')">Derin Deniz</div>
+    <div class="tema-sec" onclick="temaSet('terminal')">Terminal</div>
+    <div class="tema-sec" onclick="temaSet('paper')">Saman Kağıdı</div>
+</section>
+
     </section>
 
     <section>
@@ -602,6 +625,43 @@ window.addEventListener('load', () => {
     yukleAyarlari();
     // ... mevcut ciz() çağrısı vs.
 });
+
+
+        function temaSet(t) {
+
+    const root = document.documentElement;
+
+    if (t === "default") {
+        root.style.setProperty('--bg', '#0f172a');
+        root.style.setProperty('--card', '#111827');
+        root.style.setProperty('--text', '#e5e7eb');
+    }
+
+    if (t === "deep") {
+        root.style.setProperty('--bg', '#020617');
+        root.style.setProperty('--card', '#0f172a');
+        root.style.setProperty('--text', '#cbd5f5');
+    }
+
+    if (t === "terminal") {
+        root.style.setProperty('--bg', '#000000');
+        root.style.setProperty('--card', '#001100');
+        root.style.setProperty('--text', '#00ff88');
+    }
+
+    if (t === "paper") {
+        root.style.setProperty('--bg', '#f3e7c9');
+        root.style.setProperty('--card', '#fff6dc');
+        root.style.setProperty('--text', '#3a2e1f');
+    }
+
+    localStorage.setItem("tema-secim", t);
+}
+
+        temaSet(localStorage.getItem("tema-secim") || "default");
+
+    
+    
     </script>
 
 </body>
