@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* --- TEMEL DEĞİŞKENLER VE TEMALAR --- */
+        #about-panel.open { right: 0 !important; }
         :root {
             --bg: #f0f2f5; --card: #ffffff; --accent: #0969da; --text: #1f2328; 
             --border: #d0d7de; --danger: #cf222e; --warning: #9a6700; 
@@ -20,152 +20,211 @@
             --input: #010409; --shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
-        /* --- ÖZEL TEMALAR --- */
-        body.theme-ocean { --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --accent: #38bdf8; --border: #334155; }
-        body.theme-terminal { --bg: #000000; --card: #0a0a0a; --text: #00ff00; --accent: #00ff00; --border: #00ff00; }
-        body.theme-paper { --bg: #f4ecd8; --card: #fdf8e1; --text: #5b4636; --accent: #8b4513; --border: #d6c19d; }
-
         html, body {
             margin: 0; padding: 0; height: 100vh; width: 100vw;
             overflow: hidden; background-color: var(--bg);
             color: var(--text); font-family: 'Inter', sans-serif;
             position: relative; transition: background 0.3s;
+            overscroll-behavior-y: contain;
+        }
+        body { display: flex; flex-direction: column; }
+        
+        /* --- YUVARLAK SIMETRIK REFRESH UI --- */
+        #ptr-indicator {
+            position: fixed;
+            top: -65px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 45px;
+            height: 45px;
+            background: var(--card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 10001;
+            transition: top 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--border);
         }
 
-        /* --- AYARLAR PANELİ TASARIMI --- */
-        .settings-sidebar {
-            position: fixed;
-            right: -350px;
-            top: 0;
-            width: 320px;
-            height: 100vh;
-            background-color: var(--card);
-            box-shadow: -5px 0 15px rgba(0,0,0,0.15);
-            z-index: 10005;
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 25px;
+        #ptr-icon {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            transition: transform 0.1s linear;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .refreshing #ptr-icon {
+            animation: spin 0.8s linear infinite !important;
+        }
+
+        /* --- SIDEBAR & PANELS --- */
+        #sidebar {
+            position: fixed; top: 0; left: calc(-1 * var(--side-w)); width: var(--side-w); height: 100%;
+            background: var(--card); border-right: 1px solid var(--border); z-index: 9999;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px;
             box-sizing: border-box;
         }
-        .settings-sidebar.active { right: 0; }
+        #sidebar.open { transform: translateX(var(--side-w)); }
 
-        /* --- BLUR VE OVERLAY SİSTEMİ --- */
-        #overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.4);
-            z-index: 10000;
-            display: none;
-            backdrop-filter: blur(2px); /* Blur burayı etkiler */
+        #notes-panel {
+            position: fixed; top: 0; right: -350px; width: 320px; height: 100%;
+            background: var(--card); border-left: 1px solid var(--border); z-index: 9999;
+            transition: 0.3s ease; padding: 25px; display: flex; flex-direction: column;
+            box-sizing: border-box;
         }
-        #overlay.active { display: block; }
+        #notes-panel.open { right: 0; }
 
-        /* --- DİĞER STİLLER --- */
-        header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; }
+        .overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 9000;
+            opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(2px);
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        .menu-item {
+            padding: 12px 15px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            font-weight: 500; transition: 0.2s; margin-bottom: 5px; color: var(--text);
+        }
+        .menu-item:hover { background: var(--bg); color: var(--accent); }
+
+        header { display: flex; align-items: center; justify-content: space-between; padding: 20px 40px; flex-shrink: 0; }
         .logo-area { display: flex; align-items: center; gap: 15px; }
-        h1 { font-family: 'Montserrat'; font-size: 1.1rem; font-weight: 800; margin: 0; }
-        .board-wrapper { flex-grow: 1; overflow-x: auto; display: flex; padding: 20px 40px; }
-        .board { display: flex; gap: 25px; }
-        .card { width: 280px; height: 320px; background: var(--card); border-radius: 12px; border: 1px solid var(--border); padding: 20px; box-shadow: var(--shadow); }
-        .set-btn { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); cursor: pointer; }
-        footer { padding: 10px; text-align: center; font-size: 0.7rem; opacity: 0.5; border-top: 1px solid var(--border); }
+        .burger { font-size: 1.6rem; cursor: pointer; background: none; border: none; color: var(--text); padding: 0; }
+        header img { width: 35px; height: 35px; border-radius: 6px; object-fit: cover; }
+        h1 { font-family: 'Montserrat'; font-size: 1.1rem; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
+
+        .theme-toggle {
+            background: var(--card); border: 1px solid var(--border); color: var(--text);
+            padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 0.7rem;
+            display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow);
+            text-transform: uppercase; font-weight: 600;
+        }
+
+        .board-wrapper { 
+            flex-grow: 1; 
+            overflow-x: auto; 
+            overflow-y: hidden; 
+            display: flex; 
+            align-items: center; 
+            padding: 20px 40px; 
+            -webkit-overflow-scrolling: touch; 
+        }
+        
+        .board { 
+            display: grid; 
+            grid-template-rows: repeat(2, 340px); 
+            grid-auto-flow: column; 
+            gap: 25px; 
+            align-items: start;
+        }
+
+        .card, .silhouette { 
+            width: 280px; 
+            height: 320px; 
+            border-radius: 12px; 
+            flex-shrink: 0; 
+            position: relative; 
+            box-sizing: border-box;
+        }
+
+        .card { 
+            background: var(--card); 
+            padding: 20px; 
+            border: 1px solid var(--border); 
+            display: flex; 
+            flex-direction: column; 
+            box-shadow: var(--shadow); 
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+            border-color: var(--accent);
+        }
+
+        .task-list { 
+            overflow-y: auto; 
+            flex-grow: 1; 
+            margin: 10px 0; 
+            padding-right: 5px;
+        }
+        
+        .task-list::-webkit-scrollbar { width: 4px; }
+        .task-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        .silhouette { 
+            border: 2px dashed var(--border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            color: var(--border); 
+            font-size: 1.1rem; 
+            background: transparent;
+            transition: 0.2s;
+        }
+        .silhouette:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.02); }
+
+        .note-item {
+            background: var(--bg); padding: 12px; border-radius: 8px; margin-bottom: 10px;
+            font-size: 0.85rem; position: relative; border-left: 4px solid var(--accent); word-wrap: break-word;
+        }
+        .note-del {
+            float: right; color: var(--danger); font-size: 0.7rem; cursor: pointer;
+            font-weight: bold; margin-left: 10px; opacity: 0.7;
+        }
+
+        @media (max-width: 800px) {
+            .board { display: flex; flex-direction: row; gap: 15px; padding-bottom: 20px; }
+            .card, .silhouette { width: 85vw; height: 400px; }
+            .card:hover { transform: none; }
+            .board-wrapper { padding: 10px 20px; }
+            h1 { font-size: 0.9rem; }
+            header { padding: 15px 20px; }
+        }
+
+        .delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: #8b949e; font-size: 20px; cursor: pointer; line-height: 1; z-index: 10; }
+        .task-item { display: flex; align-items: center; margin: 8px 0; font-size: 0.9rem; word-break: break-word; gap: 8px; }
+        .priority-high { color: var(--danger); font-weight: 600; }
+        .priority-medium { color: var(--warning); font-weight: 500; }
+        .priority-low { color: var(--accent); }
+        .done { text-decoration: line-through; opacity: 0.4 !important; color: #8b949e !important; }
+        
+        .input-box { 
+            background: var(--input); border: 1px solid var(--border); color: var(--text); 
+            padding: 10px; border-radius: 8px; width: 100%; outline: none; 
+            font-size: 0.85rem; box-sizing: border-box; transition: 0.2s;
+        }
+        .input-box:focus { border-color: var(--accent); }
+        .info-note { font-size: 9px; opacity: 0.6; margin-bottom: 5px; font-style: italic; display: flex; justify-content: space-between; }
+        footer { padding: 10px; text-align: center; font-size: 0.7rem; opacity: 0.5; border-top: 1px solid var(--border); flex-shrink: 0; }
+
+        :root {
+    /* ... mevcut değişkenler ... */
+    --font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    /* ... */
+}
+
+#ayarlar-panel.open {
+    right: 0 !important;
+}
+        
     </style>
 </head>
-<body class="theme-default">
-
-    <div id="overlay" onclick="closeAll()"></div>
-
-    <header>
-        <div class="logo-area">
-            <button class="burger" onclick="toggleSettings()">☰</button>
-            <h1>ODAK DEFTERİ</h1>
-        </div>
-        <button class="theme-toggle" onclick="toggleSettings()">AYARLAR</button>
-    </header>
-
-    <div class="board-wrapper">
-        <div class="board">
-            <div class="card">
-                <h3>Giriş</h3>
-                <p>Notlarını buraya ekleyebilirsin.</p>
-            </div>
-            </div>
-    </div>
-
-    <div id="settings-panel" class="settings-sidebar">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 style="font-family:'Montserrat'; margin:0;">AYARLAR</h3>
-            <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem;">&times;</span>
-        </div>
-        
-        <div class="setting-group">
-            <label>Görünüm Teması</label>
-            <button class="set-btn" onclick="changeTheme('default')">Varsayılan</button>
-            <button class="set-btn" onclick="changeTheme('ocean')">Derin Deniz</button>
-            <button class="set-btn" onclick="changeTheme('terminal')">Terminal</button>
-            <button class="set-btn" onclick="changeTheme('paper')">Saman Kağıdı</button>
-        </div>
-
-        <div class="setting-group" style="margin-top:20px;">
-            <label>Koyu Mod</label>
-            <button class="set-btn" onclick="toggleDarkMode()">Gece Modu Aç/Kapat</button>
-        </div>
-    </div>
-
-    <footer>Odak Defteri v3.0.1 - 2024</footer>
-
-    <script>
-        // PANEL AÇMA / KAPATMA
-        function toggleSettings() {
-            document.getElementById('settings-panel').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
-        function closeAll() {
-            document.getElementById('settings-panel').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-        }
-
-        // TEMA DEĞİŞTİRME
-        function changeTheme(themeName) {
-            document.body.className = ''; // Tüm temaları sil
-            if(themeName !== 'default') {
-                document.body.classList.add('theme-' + themeName);
-            }
-        }
-
-        function toggleDarkMode() {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            if (currentTheme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-            }
-        }
-    </script>
-</body>
-</html>
-
-    
-</head>
-    <div id="settings-panel" class="settings-sidebar">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">AYARLAR</h3>
-        <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem;">&times;</span>
-    </div>
-    
-    <div class="settings-content">
-        <p><b>Görünüm Teması</b></p>
-        <button onclick="changeTheme('ocean')" class="set-btn">Okyanus Mavisi</button>
-        <button onclick="changeTheme('terminal')" class="set-btn">Terminal (Yeşil)</button>
-        <button onclick="changeTheme('default')" class="set-btn">Varsayılan</button>
-        
-        <p style="margin-top:20px;"><b>Yazı Tipi</b></p>
-        <button onclick="changeFont('serif')" class="set-btn">Kitap (Serif)</button>
-        <button onclick="changeFont('monospace')" class="set-btn">Kod (Mono)</button>
-    </div>
-</div>
-
-    
 <body data-theme="dark">
     <div id="ptr-indicator">
         <span id="ptr-icon"></span>
@@ -177,9 +236,8 @@
         <h2 style="font-family:'Montserrat'; color:var(--accent); margin-bottom:30px; font-size: 1.5rem;">MENU</h2>
         <div class="menu-item" onclick="closeAll()">📅 Günlük Plan</div>
         <div class="menu-item" onclick="openNotes()">📝 Notlarım</div>
-        <div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
-        <div class="menu-item" onclick="toggleSettings()" style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px;">⚙️ Ayarlar</div>
-</div>
+        <<div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
+        <div class="menu-item" onclick="openAyarlar()">⚙️ Ayarlar</div>
     </nav>
 
     <div id="notes-panel">
@@ -196,6 +254,33 @@
         <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">HAKKINDA</h3>
         <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem; line-height: 1;">&times;</span>
     </div>
+        <div id="ayarlar-panel" class="notes-panel-style" style="position: fixed; top: 0; right: -350px; width: 320px; height: 100%; background: var(--card); border-left: 1px solid var(--border); z-index: 9999; transition: 0.3s ease; padding: 25px; display: flex; flex-direction: column; box-sizing: border-box;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">AYARLAR</h3>
+        <span onclick="closeAll()" style="cursor:pointer; font-size:1.8rem; line-height:1;">×</span>
+    </div>
+
+    <section style="margin-bottom: 30px;">
+        <label style="display:block; margin-bottom:8px; font-weight:500;">Tema</label>
+        <select id="select-tema" class="input-box" style="width:100%; padding:12px;">
+            <option value="system">Sistem varsayılanı</option>
+            <option value="light">Aydınlık</option>
+            <option value="dark">Karanlık</option>
+        </select>
+    </section>
+
+    <section>
+        <label style="display:block; margin-bottom:8px; font-weight:500;">Yazı Tipi</label>
+        <select id="select-font" class="input-box" style="width:100%; padding:12px;">
+            <option value="'Inter', system-ui, sans-serif">Inter (varsayılan)</option>
+            <option value="'Montserrat', system-ui, sans-serif">Montserrat</option>
+            <option value="'Roboto', system-ui, sans-serif">Roboto</option>
+            <option value="'Open Sans', system-ui, sans-serif">Open Sans</option>
+            <option value="Georgia, serif">Georgia (kitap havası)</option>
+            <option value="'Courier New', monospace">Monospace</option>
+        </select>
+    </section>
+</div>
     <div style="font-size: 0.9rem; line-height: 1.6;">
         <p><strong>Odak Defteri Test v3.0.1</strong></p>
         <p>Bu uygulama, günlük planlarınızı ve notlarınızı yerel hafızada (LocalStorage) saklayan, hafif ve hızlı bir planlayıcıdır.</p>
@@ -211,11 +296,7 @@
         <p style="margin-top: 20px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-radius: 8px; font-size: 0.8rem; color: var(--warning); border: 1px dashed var(--warning);">
     ⚠️ <b>Geliştirme Aşaması:</b> Bu uygulama henüz Beta sürümündedir. Kullanım sırasında çeşitli hatalarla karşılaşmanız olasıdır.Anlayışınız için teşekkür ederiz
 </p>
-     </div>
     </div>
-</div>
-
-<div id="overlay" onclick="toggleSettings()"></div>
 </div>
 
     <header id="app-header">
@@ -316,9 +397,6 @@
             // Her şeyi başlangıç durumuna getirir
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('notes-panel').classList.remove('open');
-            document.getElementById('about-panel').classList.remove('open');
-            document.getElementById('settings-panel').classList.remove('active'); // Bunu ekledik
-            document.getElementById('overlay').classList.remove('active');
             // Hakkında paneli için hem class hem style kontrolü (garanti olsun diye)
             const about = document.getElementById('about-panel');
             if(about) about.classList.remove('open'); 
@@ -444,36 +522,81 @@
             drawNotes(); 
         }
 
-        
-        // Tema Değiştirme
-        function changeTheme(theme) {
-            const body = document.body;
-            body.classList.remove('theme-paper', 'theme-ocean', 'theme-terminal');
-            
-            if (theme !== 'default') {
-                body.classList.add('theme-' + theme);
-            }
-        }
-        
-        // Yazı Tipi Değiştirme
-        function changeFont(fontType) {
-            const body = document.body;
-            if (fontType === 'serif') {
-                body.style.fontFamily = "'Georgia', serif";
-            } else if (fontType === 'monospace') {
-                body.style.fontFamily = "'Courier New', monospace";
-            } else {
-                body.style.fontFamily = "'Segoe UI', sans-serif";
-            }
-        }
-
         ciz();
 
+        // ----------------- AYARLAR -----------------
+
+function openAyarlar() {
+    closeAll();
+    const panel = document.getElementById('ayarlar-panel');
+    panel.classList.add('open');
+    document.getElementById('overlay').classList.add('active');
+    
+    // Mevcut ayarları select'lere yansıt
+    yukleAyarlari();
+}
+
+function yukleAyarlari() {
+    const tema = localStorage.getItem('tema-secim') || 'system';
+    const font = localStorage.getItem('font-secim') || "'Inter', system-ui, sans-serif";
+    
+    document.getElementById('select-tema').value = tema;
+    document.getElementById('select-font').value = font;
+    
+    uygulaTema(tema);
+    uygulaFont(font);
+}
+
+function uygulaTema(secim) {
+    let tema;
+    if (secim === 'system') {
+        tema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    } else {
+        tema = secim;
+    }
+    
+    document.body.setAttribute('data-theme', tema);
+    // Eski tema toggle butonunu da güncelleyelim (opsiyonel)
+    document.getElementById('theme-btn').innerText = tema === 'dark' ? '🌙 MOD' : '☀️ MOD';
+}
+
+function uygulaFont(fontAilesi) {
+    document.documentElement.style.setProperty('--font-family', fontAilesi);
+}
+
+// Select değişikliklerini dinle
+document.getElementById('select-tema')?.addEventListener('change', (e) => {
+    const secim = e.target.value;
+    localStorage.setItem('tema-secim', secim);
+    uygulaTema(secim);
+});
+
+document.getElementById('select-font')?.addEventListener('change', (e) => {
+    const font = e.target.value;
+    localStorage.setItem('font-secim', font);
+    uygulaFont(font);
+});
+
+// Mevcut temaDegistir fonksiyonunu da güncelleyelim (manuel toggle artık sistem moduna saygı duysun)
+function temaDegistir() {
+    const mevcut = localStorage.getItem('tema-secim') || 'system';
+    let yeni;
+    
+    if (mevcut === 'system') yeni = 'dark';
+    else if (mevcut === 'dark') yeni = 'light';
+    else yeni = 'system';
+    
+    localStorage.setItem('tema-secim', yeni);
+    document.getElementById('select-tema').value = yeni;
+    uygulaTema(yeni);
+}
+
+// Sayfa yüklendiğinde ayarları uygula
+window.addEventListener('load', () => {
+    yukleAyarlari();
+    // ... mevcut ciz() çağrısı vs.
+});
     </script>
-<div id="settings-panel" class="settings-sidebar">
-    <h3>AYARLAR</h3>
-    <button onclick="closeAll()">Kapat</button>
-    </div>
+
 </body>
 </html>
-
