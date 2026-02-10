@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Odak Defteri Test v3.0.1</title>
@@ -208,126 +209,29 @@
         .input-box:focus { border-color: var(--accent); }
         .info-note { font-size: 9px; opacity: 0.6; margin-bottom: 5px; font-style: italic; display: flex; justify-content: space-between; }
         footer { padding: 10px; text-align: center; font-size: 0.7rem; opacity: 0.5; border-top: 1px solid var(--border); flex-shrink: 0; }
-    
-             .mini-challenge {
-                background: rgba(255, 255, 255, 0.05); /* Arka plana uyumlu çok hafif şeffaf */
-                border-left: 3px solid #6e8efb;
-                padding: 8px 12px;
-                margin: 10px 0 10px 50px; /* Logodan biraz sağa açılması için */
-                border-radius: 6px;
-                max-width: 250px; /* Çok uzayıp gitmemesi için */
-            }
-            
-            .mini-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                font-size: 0.65rem;
-                font-weight: bold;
-                color: #a7a7ff;
-                letter-spacing: 0.5px;
-                margin-bottom: 3px;
-            }
-            
-            #challenge-btn {
-                background: #6e8efb;
-                color: white;
-                border: none;
-                width: 18px;
-                height: 18px;
-                border-radius: 4px;
-                cursor: pointer;
-                font-size: 0.6rem;
-                transition: 0.2s;
-            }
-            
-            #challenge-text {
-                font-size: 0.8rem;
-                color: #e0e0e0;
-                margin: 0;
-                line-height: 1.2;
-            }
-            
-            /* Tamamlandığında */
-            .challenge-completed {
-                border-left-color: #4caf50 !important;
-                background: rgba(76, 175, 80, 0.1) !important;
-            }
-            const challenges = [
-    "Bugün en az 2 litre su içmeyi unutma! 💧",
-    "Masandaki 3 gereksiz şeyi çöpe at. 🗑️",
-    "Bugün 15 dakika boyunca sadece kitap oku. 📚",
-    "Hiç bilmediğin bir konuda 5 dakikalık bir video izle. 🧠",
-    "Bir yakınına 'nasılsın' mesajı at. 📱",
-    "Bugün şekerli içeceklerden uzak dur. 🍏",
-    "5 dakika boyunca sadece derin nefes egzersizi yap. 🧘",
-    "Yarın yapacağın en önemli 3 şeyi şimdiden belirle. 📝"
-    "5 dakika boyunca sadece dik oturmaya odaklan. 🧘‍♂️",
-    "Bugün en az 1.5 litre su iç. 💧",
-    "Çalışma masandaki gereksiz 3 kağıdı çöpe at. 🗑️",
-    "En az 10 dakika boyunca telefona bakmadan sadece dışarıyı izle. 🪟",
-    "Bugün bir öğününde mutlaka yeşillik tüket. 🥗",
-    "Yarın sabah giyeceğin kıyafetleri şimdiden hazırla. 👕",
-    "E-postandaki veya galerindeki 10 gereksiz şeyi sil. 📱",
-    "Bugün birine içten bir 'Teşekkür ederim' de. ✨",
-    "Yatağını bu sabah toplamadıysan şimdi düzelt. 🛏️",
-    "En sevdiğin şarkıyı aç ve 3 dakika boyunca hiçbir şey yapmadan dinle. 🎵",
-    "Bugün şekerli/asitli içecek yerine bitki çayı veya su tercih et. 🍵",
-    "Okumayı ertelediğin bir kitabın sadece 2 sayfasını oku. 📚",
-    "Gözlerini dinlendirmek için 20 saniye boyunca çok uzağa bak. 👀",
-    "Bugün kendine 'Bugün neyi iyi yaptım?' diye sor. 🏆",
-    "Kısa bir yürüyüşe çık veya olduğun yerde esneme hareketleri yap. 🚶‍♂️",
-    "Masanın tozunu al veya ekranını temizle. ✨",
-    "Bugün sosyal medyada geçirdiğin süreyi 15 dakika azalt. 🕒",
-    "Gelecek hafta için kendine küçük bir hedef belirle. 🎯",
-    "Bugün kahveni/çayını şekersiz içmeyi dene. ☕",
-    "Cüzdanındaki fişleri veya gereksiz kartları temizle. 💳"
-];
-
-function setupDailyChallenge() {
-    const textEl = document.getElementById('challenge-text');
-    if (!textEl) return; // Eleman yoksa fonksiyonu durdur, hata vermesin
-
-    const today = new Date().toDateString();
-    let lastDate = localStorage.getItem('lastChallengeDate');
-    let challengeIndex = localStorage.getItem('challengeIndex');
-    
-    if (lastDate !== today) {
-        challengeIndex = Math.floor(Math.random() * challenges.length);
-        localStorage.setItem('challengeIndex', challengeIndex);
-        localStorage.setItem('lastChallengeDate', today);
-        localStorage.setItem('challengeCompleted', "false");
-    }
-
-    textEl.innerText = challenges[challengeIndex];
-
-    if (localStorage.getItem('challengeCompleted') === today) {
-        markAsDoneUI();
-    }
-}
-
-function completeChallenge() {
-    const today = new Date().toDateString();
-    localStorage.setItem('challengeCompleted', today);
-    markAsDoneUI();
-    
-    // Küçük bir kutlama efekti (opsiyonel)
-    alert("Harikasın! Günün mücadelesini tamamladın. ✨");
-}
-
-function markAsDoneUI() {
-    const btn = document.getElementById('challenge-btn');
-    const container = document.getElementById('challenge-container');
-    btn.innerText = "Tamamlandı ✅";
-    btn.disabled = true;
-    container.classList.add('challenge-completed');
-    document.getElementById('challenge-text').style.textDecoration = "line-through";
-}
-
-// Uygulama açıldığında çalıştır
-setupDailyChallenge();
+                .btn-indir {
+            background-color: #f5f5f5; /* Açık gri arka plan */
+            color: #666; /* Koyu gri yazı */
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
         
+        .btn-indir:hover {
+            background-color: #eeeeee;
+            border-color: #ccc;
+            color: #333;
+        }
+    
     </style>
+
 </head>
 <body data-theme="dark">
     <div id="ptr-indicator">
@@ -380,19 +284,13 @@ setupDailyChallenge();
             <button class="burger" onclick="toggleMenu()">☰</button>
             <img src="logo.png" alt="Logo" onerror="this.style.display='none'">
             <h1>ODAK DEFTERİ <span style="font-size: 0.7rem; opacity: 0.5;">Test v3.0.1</span></h1>
-            <div class="mini-challenge" id="challenge-container">
-            <div class="mini-header">
-                <span>GÜNÜN MÜCADELESİ</span>
-                <button onclick="completeChallenge()" id="challenge-btn">✓</button>
-            </div>
-            <p id="challenge-text">Yükleniyor...</p>
         </div>
-
-        </div>
+                <button onclick="indirPDF()" class="btn-indir">
+            <span style="filter: grayscale(100%);">📥</span> Notları İndir
+        </button>
+        
         <button class="theme-toggle" onclick="temaDegistir()" id="theme-btn">Karanlık Mod</button>
-   
     </header>
-    
 
     <div class="board-wrapper" id="scroll-area">
         <div class="board" id="board"></div>
@@ -401,6 +299,21 @@ setupDailyChallenge();
     <footer>Odak Defterim &copy; 2026 | Tüm notlar yerel hafızadadır.</footer>
 
     <script>
+                    function indirPDF() {
+                // PDF'e dönüştürülecek alan (Senin notlarının olduğu div'in ID'si)
+                const element = document.getElementById('notlar-listesi'); 
+                
+                const ayarlar = {
+                    margin:       10,
+                    filename:     'Odak_Defteri_Notlarim.pdf',
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2 },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+            
+                // İndirme işlemi
+                html2pdf().set(ayarlar).from(element).save();
+            }
         let gunler = JSON.parse(localStorage.getItem('ajanda_v8')) || [];
         let notlar = JSON.parse(localStorage.getItem('odak_notlar_v9')) || [];
         const scrollArea = document.getElementById('scroll-area');
