@@ -627,14 +627,22 @@ window.addEventListener('load', () => {
 });
 
 
-        function temaSet(t) {
+function temaSet(t) {
 
     const root = document.documentElement;
 
     if (t === "default") {
-        root.style.setProperty('--bg', '#0f172a');
-        root.style.setProperty('--card', '#111827');
-        root.style.setProperty('--text', '#e5e7eb');
+
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            root.style.setProperty('--bg', '#f0f2f5');
+            root.style.setProperty('--card', '#ffffff');
+            root.style.setProperty('--text', '#1f2328');
+        } else {
+            root.style.setProperty('--bg', '#0f172a');
+            root.style.setProperty('--card', '#111827');
+            root.style.setProperty('--text', '#e5e7eb');
+        }
+
     }
 
     if (t === "deep") {
@@ -646,21 +654,18 @@ window.addEventListener('load', () => {
     if (t === "terminal") {
         root.style.setProperty('--bg', '#000000');
         root.style.setProperty('--card', '#001100');
-        root.style.setProperty('--text', '#00ff88');
-    }
+        root.style.setProperty('--text',
 
-    if (t === "paper") {
-        root.style.setProperty('--bg', '#f3e7c9');
-        root.style.setProperty('--card', '#fff6dc');
-        root.style.setProperty('--text', '#3a2e1f');
-    }
 
-    localStorage.setItem("tema-secim", t);
-}
+    window.matchMedia('(prefers-color-scheme: dark)')
+    .addEventListener('change', () => {
 
-        temaSet(localStorage.getItem("tema-secim") || "default");
+        if (localStorage.getItem("tema-secim") === "default") {
+            temaSet("default");
+        }
 
-    
+});
+
     
     </script>
 
