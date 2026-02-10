@@ -222,6 +222,7 @@
         <div class="menu-item" onclick="closeAll()">📅 Günlük Plan</div>
         <div class="menu-item" onclick="openNotes()">📝 Notlarım</div>
         <div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
+        <div class="menu-item" onclick="openSettings()">⚙️ Ayarlar</div>
     </nav>
 
     <div id="notes-panel">
@@ -238,6 +239,44 @@
         <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">HAKKINDA</h3>
         <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem; line-height: 1;">&times;</span>
     </div>
+        <div id="settings-panel" style="
+position: fixed;
+top: 0;
+right: -350px;
+width: 320px;
+height: 100%;
+background: var(--card);
+border-left: 1px solid var(--border);
+z-index: 9999;
+transition: 0.3s ease;
+padding: 25px;
+display: flex;
+flex-direction: column;
+box-sizing: border-box;
+">
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h3 style="font-family:'Montserrat'; margin:0; font-size:1.1rem;">AYARLAR</h3>
+    <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem;">×</span>
+</div>
+
+<!-- TEMA -->
+<p style="font-weight:600;">Tema</p>
+
+<div class="menu-item" onclick="temaSet('dark')">🌙 Karanlık</div>
+<div class="menu-item" onclick="temaSet('light')">☀️ Aydınlık</div>
+
+<hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
+
+<!-- FONT -->
+<p style="font-weight:600;">Font</p>
+
+<div class="menu-item" onclick="fontSet('Inter')">Inter</div>
+<div class="menu-item" onclick="fontSet('Montserrat')">Montserrat</div>
+<div class="menu-item" onclick="fontSet('system')">System Font</div>
+
+</div>
+
     <div style="font-size: 0.9rem; line-height: 1.6;">
         <p><strong>Odak Defteri Test v3.0.1</strong></p>
         <p>Bu uygulama, günlük planlarınızı ve notlarınızı yerel hafızada (LocalStorage) saklayan, hafif ve hızlı bir planlayıcıdır.</p>
@@ -351,15 +390,17 @@
         }
         
         function closeAll() {
-            // Her şeyi başlangıç durumuna getirir
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('notes-panel').classList.remove('open');
-            // Hakkında paneli için hem class hem style kontrolü (garanti olsun diye)
+        
             const about = document.getElementById('about-panel');
-            if(about) about.classList.remove('open'); 
-            
+            if(about) about.classList.remove('open');
+        
+            document.getElementById('settings-panel').style.right = "-350px";
+        
             document.getElementById('overlay').classList.remove('active');
         }
+
 
         scrollArea.addEventListener('wheel', (e) => {
             if (e.deltaY !== 0 && window.innerWidth > 800) {
@@ -480,6 +521,30 @@
         }
 
         ciz();
+        function openSettings(){
+    closeAll();
+    document.getElementById('settings-panel').style.right = "0";
+    document.getElementById('overlay').classList.add('active');
+}
+
+        function fontSet(font){
+
+    let f;
+
+    if(font === "system")
+        f = "system-ui, sans-serif";
+    else if(font === "Montserrat")
+        f = "'Montserrat', sans-serif";
+    else
+        f = "'Inter', sans-serif";
+
+    document.body.style.fontFamily = f;
+    localStorage.setItem("odak_font", font);
+}
+
+        const kayitliFont = localStorage.getItem("odak_font") || "Inter";
+fontSet(kayitliFont);
+
     </script>
 </body>
 </html>
