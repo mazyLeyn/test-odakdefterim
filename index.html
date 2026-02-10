@@ -279,7 +279,60 @@
                 display: block !important;
             }
                 
-    
+    /* --- AYARLAR PANELİ İÇ TASARIM DOKUNUŞLARI --- */
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.settings-header h3 {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--accent);
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text);
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.setting-group {
+    margin-bottom: 25px;
+}
+
+.setting-group label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+}
+
+.setting-group select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    outline: none;
+    cursor: pointer;
+}
+
+/* Dark Mode Uyumu: Ayarlar paneli de koyulaşsın */
+[data-theme="dark"] .settings-sidebar {
+    background-color: var(--card) !important;
+    border-left: 1px solid var(--border);
+}
     
     </style>
 
@@ -296,7 +349,7 @@
         <h2 style="font-family:'Montserrat'; color:var(--accent); margin-bottom:30px; font-size: 1.5rem;">MENU</h2>
         <div class="menu-item" onclick="closeAll()">📅 Günlük Plan</div>
         <div class="menu-item" onclick="openNotes()">📝 Notlarım</div>
-        <<div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
+        <div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
         <div class="menu-item" onclick="toggleSettings()" style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px;">⚙️ Ayarlar</div>
 </div>
     </nav>
@@ -435,6 +488,9 @@
             // Her şeyi başlangıç durumuna getirir
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('notes-panel').classList.remove('open');
+            document.getElementById('about-panel').classList.remove('open');
+            document.getElementById('settings-panel').classList.remove('active'); // Bunu ekledik
+            document.getElementById('overlay').classList.remove('active');
             // Hakkında paneli için hem class hem style kontrolü (garanti olsun diye)
             const about = document.getElementById('about-panel');
             if(about) about.classList.remove('open'); 
@@ -587,8 +643,7 @@
         }
 
         ciz();
-    </script>
-        /* Ayarlar Paneli - Sayfadan bağımsız, sağa sabitlenmiş */
+                /* Ayarlar Paneli - Sayfadan bağımsız, sağa sabitlenmiş */
         .settings-sidebar {
             position: fixed; /* Sayfayı kaydırsan da burada kalır */
             right: -320px;   /* Başlangıçta ekranın dışında durur */
@@ -622,5 +677,7 @@
         #overlay.active {
             display: block;
         }
+    </script>
+
 </body>
 </html>
