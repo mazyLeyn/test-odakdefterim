@@ -256,6 +256,12 @@
         border-color:var(--accent);
         transform:translateY(-2px);
         }
+        .theme-card.active{
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(88,166,255,0.25);
+    transform: translateY(-2px);
+}
+
 
             
           .font-sec {
@@ -651,10 +657,20 @@ box-sizing: border-box;
         const kayitliFont = localStorage.getItem("odak_font") || "Inter";
 fontSet(kayitliFont);
 
-        function presetSet(name){
+function presetSet(name){
+
     document.body.setAttribute("data-preset", name);
     localStorage.setItem("preset", name);
+
+    // aktif kart efekti
+    document.querySelectorAll(".theme-card").forEach(el=>{
+        el.classList.remove("active");
+    });
+
+    const aktif = document.querySelector(`[onclick="presetSet('${name}')"]`);
+    if(aktif) aktif.classList.add("active");
 }
+
 
         document.body.setAttribute(
     "data-preset",
