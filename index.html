@@ -8,14 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         #about-panel.open { right: 0 !important; }
-        :root {
-            --bg: #0f172a;
-            --card: #111827;
-            --text: #e5e7eb;
-            --border: #30363d;
-            --accent: #3b82f6;
-
-            
+        :root {   
             --bg: #f0f2f5; --card: #ffffff; --accent: #0969da; --text: #1f2328; 
             --border: #d0d7de; --danger: #cf222e; --warning: #9a6700; 
             --input: #ffffff; --shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -279,8 +272,6 @@ body {
         </div>
     
         <div style="font-size:0.9rem; line-height:1.6;">
-            </div>
-    <div style="font-size: 0.9rem; line-height: 1.6;">
         <p><strong>Odak Defteri Test v3.0.1</strong></p>
         <p>Bu uygulama, günlük planlarınızı ve notlarınızı yerel hafızada (LocalStorage) saklayan, hafif ve hızlı bir planlayıcıdır.</p>
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
@@ -317,8 +308,6 @@ body {
     <div class="tema-sec" onclick="temaSet('terminal')">Terminal</div>
     <div class="tema-sec" onclick="temaSet('paper')">Saman Kağıdı</div>
 </section>
-
-    </section>
 
     <section>
         <label style="display:block; margin-bottom:8px; font-weight:500;">Yazı Tipi</label>
@@ -448,7 +437,6 @@ body {
         }, { passive: false });
 
         function temaSet(tema) {
-            document.body.setAttribute('data-theme', tema);
             localStorage.setItem('tema', tema);
             document.getElementById('theme-btn').innerText = tema === 'dark' ? '🌙 MOD' : '☀️ MOD';
         }
@@ -576,7 +564,7 @@ function yukleAyarlari() {
     const tema = localStorage.getItem('tema-secim') || 'system';
     const font = localStorage.getItem('font-secim') || "'Inter', system-ui, sans-serif";
     
-    document.getElementById('select-tema').value = tema;
+    document.getElementById('select-tema')?.value = tema;
     document.getElementById('select-font').value = font;
     
     uygulaTema(tema);
