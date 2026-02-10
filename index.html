@@ -299,21 +299,17 @@
     <footer>Odak Defterim &copy; 2026 | Tüm notlar yerel hafızadadır.</footer>
 
     <script>
-                    function indirPDF() {
-                // PDF'e dönüştürülecek alan (Senin notlarının olduğu div'in ID'si)
-                const element = document.getElementById('notlar-listesi'); 
-                
-                const ayarlar = {
-                    margin:       10,
-                    filename:     'Odak_Defteri_Notlarim.pdf',
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2 },
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-            
-                // İndirme işlemi
-                html2pdf().set(ayarlar).from(element).save();
+             function indirPDF() {
+            // ÖNEMLİ: 'notlar-listesi' yerine kendi not kutunun ID'sini yaz!
+            const element = document.getElementById('notlar-listesi'); 
+        
+            if (!element) {
+                alert("Hata: Not kutusu bulunamadı! Lütfen ID ismini kontrol et.");
+                return;
             }
+        
+            html2pdf(element);
+        }
         let gunler = JSON.parse(localStorage.getItem('ajanda_v8')) || [];
         let notlar = JSON.parse(localStorage.getItem('odak_notlar_v9')) || [];
         const scrollArea = document.getElementById('scroll-area');
