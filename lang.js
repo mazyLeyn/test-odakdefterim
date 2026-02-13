@@ -31,6 +31,7 @@ preset_paper: "Paper",
 
 dark_mode: "Dark",
 light_mode: "Light"
+    
 
 }
 
@@ -58,3 +59,13 @@ const saved = localStorage.getItem("lang") || "tr";
 dilSet(saved);
 
 });
+
+
+tr: {
+task_add: "Görev Ekle"
+},
+
+en: {
+task_add: "Add Task"
+}
+
