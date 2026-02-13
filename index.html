@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Odak Defteri Test v3.0.3</title>
+    <title>Odak Defteri Test v3.0.4</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -309,10 +309,22 @@
     
     <nav id="sidebar">
         <h2 style="font-family:'Montserrat'; color:var(--accent); margin-bottom:30px; font-size: 1.5rem;">MENU</h2>
-        <div class="menu-item" onclick="closeAll()">📅 Günlük Plan</div>
-        <div class="menu-item" onclick="openNotes()">📝 Notlarım</div>
-        <div class="menu-item" onclick="openAbout()">ℹ️ Hakkında</div>
-        <div class="menu-item" onclick="openSettings()">⚙️ Ayarlar</div>
+        <div class="menu-item" onclick="closeAll()">
+            📅 <span data-lang="plan">Günlük Plan</span>
+        </div>
+
+        <div class="menu-item" onclick="openNotes()">
+            📝 <span data-lang="notes">Notlarım</span>
+        </div>
+
+        <div class="menu-item" onclick="openAbout()">
+            ℹ️ <span data-lang="about">Hakkında</span>
+        </div>
+
+        <div class="menu-item" onclick="openSettings()">
+            ⚙️ <span data-lang="settings">Ayarlar</span>
+        </div>
+
     </nav>
 
     <div id="notes-panel">
@@ -345,8 +357,21 @@ padding: 25px;
 display: flex;
 flex-direction: column;
 box-sizing: border-box;
+overflow-y: auto;
 ">
 
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3>Ayarlar</h3>
+        <span onclick="closeAll()" style="cursor:pointer; font-size:1.5rem;">×</span>
+    </div>
+
+    <h4>Dil</h4>
+
+    <div class="theme-card" onclick="dilSet('tr')">🇹🇷 Türkçe</div>
+    <div class="theme-card" onclick="dilSet('en')">🇬🇧 English</div>
+
+</div>
+<span data-lang="task_add">Görev Ekle</span>
 
 
             
@@ -392,7 +417,7 @@ box-sizing: border-box;
 </div>
 
     <div style="font-size: 0.9rem; line-height: 1.6;">
-        <p><strong>Odak Defteri Test v3.0.3</strong></p>
+        <p><strong>Odak Defteri Test v3.0.4</strong></p>
         <p>Bu uygulama, günlük planlarınızı ve notlarınızı yerel hafızada (LocalStorage) saklayan, hafif ve hızlı bir planlayıcıdır.</p>
         <hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;">
         <p>🚀 <b>Özellikler:</b></p>
@@ -687,5 +712,7 @@ presetSet(kayitliTema);
 
 
     </script>
+    <script src="lang.js"></script>
+
 </body>
 </html>
